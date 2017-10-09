@@ -1,0 +1,40 @@
+
+
+/*Business Card Css */
+.business-card {
+  border: 1px solid #cccccc;
+  background: #f8f8f8;
+  padding:5px;
+  border-radius: 4px;
+  margin: 5px 3px 5px 0px;
+}
+.profile-img {
+  height: 100px;
+  background: white;
+}
+.job {
+  color: #666666;
+  font-size: 17px;
+}
+.mail {
+  font-size: 16px;
+ }
+
+
+ .titlestyle {
+   font-size: 13px;
+  font-weight: normal;
+  color: gray;
+  text-align: left;
+  padding: 7px 5px 0px 15px;
+  margin: 0px 0px 0px 0px;
+}
+
+.datastyle {
+  font-size: 14px;
+  font-weight: normal;
+  color: black;
+  text-align: left;
+  padding: 4px 5px 0px 15px;
+  margin: 0px 0px 0px 0px;
+}

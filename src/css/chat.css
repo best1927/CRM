@@ -1,0 +1,73 @@
+/*Chat*/
+        .chat {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+            .chat li {
+                margin-bottom: 10px;
+                padding: 8px; 
+            }
+
+                .chat li.left .chat-body {
+                    margin-left: 60px;
+                }
+
+                .chat li.right .chat-body {
+                    margin-right: 60px;
+                }
+
+
+                .chat li .chat-body p {
+                    margin: 0;
+                    color: #777777;
+                }
+
+            .panel .slidedown .glyphicon, .chat .glyphicon {
+                margin-right: 5px;
+            }
+
+        .panel-body {
+            overflow-y: scroll;
+            height: 400px;
+        }
+
+        ::-webkit-scrollbar-track {
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+            background-color: #F5F5F5;
+        }
+
+        ::-webkit-scrollbar {
+            width: 12px;
+            background-color: #F5F5F5;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+            background-color: #555;
+        }
+
+
+        .navchat{
+            margin-bottom: 10px;
+            border:  1px solid;
+             border-color: #D8DDE6;
+             color: dimgrey;
+             background-color: #F4F6F9;
+             
+        }
+        .navItemList{
+            border-bottom: 1px solid #ddd; 
+            padding: 5px; 
+            margin-left: 1px; 
+            margin-right: 1px; 
+            margin-bottom: 0px
+        }
+
+        .chattext{
+            padding: 8px;
+            background-color: whitesmoke;
+            border: 1px dotted #B3A9A9;
+            border-radius: 6px 6px 6px 6px;
+        }

@@ -1,0 +1,15 @@
+.divpieChart{
+    padding-right: 0px;
+    border-style: solid;
+    border-color: lightgrey;
+    border-bottom-width: 0px;
+    border-top-width: 0px; 
+    border-left-width: 0px;
+    border-right-width: 1px;
+}
+ 
+ .divContainerPie{
+    min-width: 250px; 
+    min-height: 450px; 
+    margin: 0 auto;
+ }
