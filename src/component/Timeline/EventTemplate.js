@@ -15,7 +15,8 @@ class EventTemplate extends React.Component {
         } 
     return (
       <li>
-        <i className="fa fa-calendar-o "  style={{background:"#8E44AD" ,color:"white"}}/>
+        {/* <i className={this.props.iConEvent}  style={{background:"#8E44AD" ,color:"white"}}/> */}
+        <i className={this.props.iConEvent}  style={{color:"white"}}/>
         <div className="timeline-item">
           <span className="time">
             {this.props.DateEvent}

@@ -35,6 +35,7 @@ import MenuSideBar from "./container/SideMenuBar/menu_sidebar";
 import DefaultContainer from "./component/Pages/DefaultContainer";
 import Organization from "./component/Pages/Organization";
 import OrganizationView from "./component/Pages/OrganizationView"; 
+import OrganizationNew from "./component/Pages/OrganizationNew"; 
 import NewsFeed from "./component/Pages/NewsFeed";  
 import Contacts from "./component/Pages/Contacts";
 import Leads from "./component/Pages/Leads";
@@ -69,13 +70,19 @@ class App extends Component {
               <Switch>
                 <Route path="/Leads" component={Leads} />
                 <Route path="/Contacts" component={Contacts} />
-                <Route path="/Organization" component={Organization} />
+
+                <Route path="/Organization" component={Organization} />    
+                <Route path="/OrganizationNew" component={OrganizationNew} />
+                <Route path="/OrganizationNew/:OrgId" component={OrganizationNew} />
+            
+                <Route path="/OrganizationView/:OrgId" component={OrganizationView} />
+
                 <Route path="/Speciallist" component={Speciallist} />
                 <Route path="/Tasks" component={Tasks} /> 
                 <Route path="/Chat" component={Chat} />
                 <Route path="/TeamTab" component={TeamTab} />
                 <Route path="/NewsFeed" component={NewsFeed} /> 
-                <Route path="/OrganizationView/:OrgId" component={OrganizationView} />
+               
                 <Route path="/" component={DefaultContainer} />
               
               </Switch>

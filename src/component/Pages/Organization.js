@@ -5,7 +5,7 @@ import HeaderItem from "../Header/HeaderItem";
 import AutoSearch from "../standard/AutoSearch";
 import Alphabetdiv from "../standard/Alphabetdiv";
 import TagSearchdiv from "../standard/TagSearchdiv";
-import OrganizationObjLst from "../ObjTemplate/OrganizationObjLst";
+import OrganizationObjLst from "../ObjTemplate/OrganizationObjLst"; 
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -30,11 +30,9 @@ class Organization extends React.Component {
     this.autohandleChange = this.autohandleChange.bind(this);
     this.handleKeyPress = this.handleKeyPress.bind(this);
 
-    this.state = {active: null }
+    this.state = { active: null };
   }
 
-
-   
   AlphaClick(param) {
     let data = {
       h: {},
@@ -47,10 +45,8 @@ class Organization extends React.Component {
           this.txtSearchOrg.value !== undefined ? this.txtSearchOrg.value : "",
         userid: "watinee.put",
         lang: "en-US",
-        local: "en-US",
         tagstr: "",
-        curpage: 0,
-        maxRec: 20
+        curpage: 0
       }
     };
     this.props.loadAppContent(data);
@@ -67,15 +63,13 @@ class Organization extends React.Component {
       methodName: "SearchOrganization",
       paramStr: {
         Alphabetfilter: "",
-        Combofilter:this.FilterCombo.value,
+        Combofilter: this.FilterCombo.value,
         txtFilter:
           this.txtSearchOrg.value !== undefined ? this.txtSearchOrg.value : "",
         userid: "watinee.put",
         lang: "en-US",
-        local: "en-US",
         tagstr: param,
-        curpage: 0,
-        maxRec: 20
+        curpage: 0
       }
     };
 
@@ -93,10 +87,8 @@ class Organization extends React.Component {
         txtFilter: "",
         userid: "watinee.put",
         lang: "en-US",
-        local: "en-US",
         tagstr: "",
-        curpage: 0,
-        maxRec: 20
+        curpage: 0
       }
     };
     this.props.loadAppContent(data);
@@ -105,6 +97,7 @@ class Organization extends React.Component {
   btnNewClick(param) {
     console.log(param);
     console.log("test btnNew Click");
+    this.props.history.push("/OrganizationNew");
   }
   handleKeyPress(event) {
     if (event.key === "Enter") {
@@ -116,17 +109,15 @@ class Organization extends React.Component {
         methodName: "SearchOrganization",
         paramStr: {
           Alphabetfilter: "",
-          Combofilter:  this.FilterCombo.value ,
+          Combofilter: this.FilterCombo.value,
           txtFilter:
             this.txtSearchOrg.value !== undefined
               ? this.txtSearchOrg.value
               : "",
           userid: "watinee.put",
           lang: "en-US",
-          local: "en-US",
           tagstr: "",
-          curpage: 0,
-          maxRec: 20
+          curpage: 0
         }
       };
 
@@ -144,35 +135,28 @@ class Organization extends React.Component {
     console.log(param);
     console.log("test btnDelete Click");
   }
-  // function select(item){
-  //   let xx = item;
-  //   this.FilterCombo.value = item;
-  //   alert(item.text+","+item.value);
-  // }
+
   handleSelect(evt) {
-    if (evt !==null){
-       this.setState({active: evt.value})
-    this.FilterCombo.value = evt.value;
-    // alert(evt.label); 
-    }else{
-      this.setState({active: null})
-      this.FilterCombo.value=""
+    if (evt !== null) {
+      this.setState({ active: evt.value });
+      this.FilterCombo.value = evt.value;
+      // alert(evt.label);
+    } else {
+      this.setState({ active: null });
+      this.FilterCombo.value = "";
     }
-   
+
     let data = {
       h: {},
       classWithNs: "CRM_Lib.Organizations_Controller,CRM_Lib",
       methodName: "SearchOrganization",
       paramStr: {
         Alphabetfilter: "",
-        Combofilter:  this.FilterCombo.value ,
+        Combofilter: this.FilterCombo.value,
         txtFilter:
-          this.txtSearchOrg.value !== undefined
-            ? this.txtSearchOrg.value
-            : "",
+          this.txtSearchOrg.value !== undefined ? this.txtSearchOrg.value : "",
         userid: "watinee.put",
         lang: "en-US",
-        local: "en-US",
         tagstr: "",
         curpage: 0,
         maxRec: 20
@@ -184,14 +168,16 @@ class Organization extends React.Component {
 
   componentDidMount() {
     window.addEventListener("resize", function(event) {
-      let divalpha = document.getElementById("divalpha");
-      let divfilterTag = document.getElementById("divfilterTag");
-      if (this.innerWidth < 850) {
-        divalpha.style.visibility = "collapse";
-        divfilterTag.style.visibility = "collapse";
-      } else {
-        divalpha.style.visibility = "visible";
-        divfilterTag.style.visibility = "visible";
+      if (document.getElementById("divalpha") !== null) {
+        let divalpha = document.getElementById("divalpha");
+        let divfilterTag = document.getElementById("divfilterTag");
+        if (this.innerWidth < 850) {
+          divalpha.style.visibility = "collapse";
+          divfilterTag.style.visibility = "collapse";
+        } else {
+          divalpha.style.visibility = "visible";
+          divfilterTag.style.visibility = "visible";
+        }
       }
     });
 
@@ -217,7 +203,6 @@ class Organization extends React.Component {
         txtFilter: "",
         userid: "watinee.put",
         lang: "en-US",
-        local: "en-US",
         tagstr: "",
         curpage: 0,
         maxRec: 20
@@ -237,21 +222,22 @@ class Organization extends React.Component {
         value: Gdobj.Gdcode,
         label: Gdobj.Desc1
       }));
-      
     }
-   
-   {/* placeholder="Filter..." */}
-    let filterelement = ( 
-      <Select 
-        className="col-md-3 pull-right blackcolor l" 
-        placeholder = "Filter ..."
-        name="form-field-name" 
+
+    {
+      /* placeholder="Filter..." */
+    }
+    let filterelement = (
+      <Select
+        className="col-md-3 pull-right blackcolor l"
+        placeholder="Filter ..."
+        name="form-field-name"
         options={filterObjlst}
         value={this.state.active}
         onChange={this.handleSelect}
         ref={c => (this.FilterCombo = c)}
-        searchable = {false} 
-					clearable
+        searchable={false}
+        clearable
       />
     );
     return (
@@ -261,6 +247,7 @@ class Organization extends React.Component {
           HeaderText="Organization"
           filiter="Y"
           DelYn="Y"
+          btnAddClick={this.btnNewClick}
           btnDeleteClick={this.btnDeleteClick}
           filterobj={filterelement}
         />

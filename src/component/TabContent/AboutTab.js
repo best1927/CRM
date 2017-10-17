@@ -4,14 +4,13 @@ import React from "react";
 //import directionModal from "../Map/GetDirectionContainer"
 import { Modal } from "react-bootstrap";
 
-let source = new google.maps.LatLng(13.734233, 100.531479);
-let destination = new google.maps.LatLng(13.826515, 100.748794);
 let directionsDisplay = new google.maps.DirectionsRenderer();
 let directionsService = new google.maps.DirectionsService();
 let bound = new google.maps.LatLngBounds();
 let listPoint = [];
 let Dimap;
 let maptmp;
+let OrgObj;
 
 class AboutTab extends React.Component {
   constructor() {
@@ -34,8 +33,7 @@ class AboutTab extends React.Component {
     });
 
     let contentString = '<div id="infomation_container" align="center">';
-    contentString +=
-      '<label id="lblAddLocation">16 Moo 2 Sai Kong Din Tai, Khlong Sam Wa, Bangkok 10510</label>';
+    contentString += '<label id="lblAddLocation"> </label>';
     contentString += "</div>";
 
     let infowindow = new google.maps.InfoWindow({
@@ -53,7 +51,14 @@ class AboutTab extends React.Component {
 
     ////////////////////////////////////// MapShow //////////////////////////////////////
   }
-  Onshow() {
+  componentWillUpdate(){
+    if (this.props.DataContext !== undefined && this.props.DataContext !== null && document.getElementById("map") !== null){
+ OverloadMap(this.props.DataContext );
+    }
+   
+  }
+  
+  Onshow(e) {
     // init
     let mapOptions = {
       zoom: 8,
@@ -87,27 +92,33 @@ class AboutTab extends React.Component {
     directionsDisplay.setPanel(document.getElementById("directions-body"));
 
     // calroute
+    if (
+      this.container.props.DataContext !== null &&
+      this.container.props.DataContext !== undefined
+    ) {
+      let Mdata = this.container.props.DataContext;
+      let source = new google.maps.LatLng(13.734233, 100.531479);
+      let destination = new google.maps.LatLng(Mdata.AddLat, Mdata.AddLong);
+      let start, end;
+      start = source;
+      end = destination;
+      listPoint.push(start);
+      listPoint.push(end);
+      let request = {
+        origin: start,
+        destination: end,
+        optimizeWaypoints: true,
+        travelMode: google.maps.TravelMode.DRIVING
+      };
 
-    let start, end;
-    start = source;
-    end = destination;
-    listPoint.push(start);
-    listPoint.push(end);
-    let request = {
-      origin: start,
-      destination: end,
-      optimizeWaypoints: true,
-      travelMode: google.maps.TravelMode.DRIVING
-    };
+      directionsService.route(request, function(response, status) {
+        if (status == google.maps.DirectionsStatus.OK) {
+          directionsDisplay.setDirections(response);
+        }
+      });
 
-    directionsService.route(request, function(response, status) {
-      if (status == google.maps.DirectionsStatus.OK) {
-        directionsDisplay.setDirections(response);
-      }
-    });
-
-
-    google.maps.event.trigger(Dimap, "resize");
+      google.maps.event.trigger(Dimap, "resize");
+    }
   }
 
   render() {
@@ -116,33 +127,53 @@ class AboutTab extends React.Component {
       height: "250px"
     };
 
-    let OrgName = "Sukjai Farm";
-    let OrgCate = "Swine Farm";
-    let OrgPhone = "(662) 64367228";
-    let OrgAddress = "16 Moo 2 Sai Kong Din Tai, Khlong Sam Wa, Bangkok 10510";
-    let OrgCreateDt = "25 May 2017";
-    let OrgCreateUser = "Somsri";
+    let OrgName = "";
+    let OrgCate = "";
+    let OrgPhone = "";
+    let OrgAddress = "";
+    let OrgCreateDt = "";
+    let OrgCreateUser = "";
+    let mapprops = {};
+    let lkData = [];
+    if (
+      this.props.DataContext !== null &&
+      this.props.DataContext !== undefined
+    ) {
+      OrgObj = this.props.DataContext;
+      OrgName = OrgObj.OrgName;
+      OrgCate = OrgObj.OrgTypeName;
+      OrgPhone = OrgObj.Phone;
+      OrgAddress = OrgObj.FullAddress;
+      OrgCreateDt = OrgObj.CreateDateStr;
+      OrgCreateUser = OrgObj.Createuser;
+      if (document.getElementById("map") !== null){
+          OverloadMap(OrgObj);
+      } 
+      mapprops = {
+        lat: OrgObj.AddLat,
+        lng: OrgObj.AddLong,
+        zoomsize: 10,
+        address: OrgObj.FullAddress
+      };
+      if (OrgObj.OrgLinklst !== undefined && OrgObj.OrgLinklst !== null) {
+        lkData = OrgObj.OrgLinklst;
+      }
+    }
 
-    let lkContactLst = [];
-    lkContactLst.push(
-      <span className="lb-dataStyle">
-        <a href="#">Katherine Reyes</a> Friend
-      </span>
-    );
-    let lkOrgLst = [];
-    lkOrgLst.push(
-      <span className="lb-dataStyle">
-        <img src={process.env.PUBLIC_URL + "/images/menu-organization.png"} />
-        <a href="#">Clampett Oil and Gas, Singapore</a> Employee
-      </span>
-    );
+    let lkDatalist = [];
 
-    let mapprops = {
-      lat: 13.826515,
-      lng: 100.748794,
-      zoomsize: 10,
-      address: "16 Moo 2 Sai Kong Din Tai, Khlong Sam Wa, Bangkok 10510"
-    };
+    if (lkData !== undefined && lkData !== null) {
+      lkDatalist = lkData.map(DataLk => (
+        <p className="lb-dataStyle">
+          {DataLk.IconPic !== undefined && DataLk.IconPic !== null ? (
+            <img src={process.env.PUBLIC_URL + "/images/" + DataLk.IconPic} />
+          ) : (
+            ""
+          )}
+          <a href="#">{DataLk.LinkName}</a> {DataLk.RelateName}
+        </p>
+      ));
+    }
 
     let Onclose = () => this.setState({ show: false });
     let directstyle = {
@@ -180,39 +211,29 @@ class AboutTab extends React.Component {
                       <label className="col-md-4 lb-LabelStyle">
                         Organization ::
                       </label>
-                      <label className="lb-dataStyle">
-                        {OrgName}
-                      </label>
+                      <label className="lb-dataStyle">{OrgName}</label>
                     </div>
                     <div className="form-group col-md-12 mbottom0">
                       <label className="col-md-4 lb-LabelStyle">
                         Organization Category ::
                       </label>
-                      <label className="lb-dataStyle">
-                        {OrgCate}
-                      </label>
+                      <label className="lb-dataStyle">{OrgCate}</label>
                     </div>
                     <div className="form-group col-md-12 mbottom0">
                       <label className="col-md-4 lb-LabelStyle">Phone ::</label>
-                      <label className="lb-dataStyle">
-                        {OrgPhone}
-                      </label>
+                      <label className="lb-dataStyle">{OrgPhone}</label>
                     </div>
                     <div className="form-group col-md-12 mbottom0">
                       <label className="col-md-4 lb-LabelStyle">
                         Address ::
                       </label>
-                      <span className="lb-dataStyle">
-                        {OrgAddress}
-                      </span>
+                      <p className="lb-dataStyle">{OrgAddress}</p>
                     </div>
                     <div className="form-group col-md-12 mbottom0">
                       <label className="col-md-4 lb-LabelStyle">
                         Contact Created ::
                       </label>
-                      <label className="lb-dataStyle">
-                        {OrgCreateDt}
-                      </label>
+                      <label className="lb-dataStyle">{OrgCreateDt}</label>
                     </div>
 
                     <div className="form-group col-md-12 mbottom0">
@@ -220,9 +241,7 @@ class AboutTab extends React.Component {
                         Contact Owner ::
                       </label>
                       <label className="lb-dataStyle">
-                        <a href="#">
-                          {OrgCreateUser}
-                        </a>
+                        <a href="#">{OrgCreateUser}</a>
                       </label>
                     </div>
                   </div>
@@ -240,16 +259,8 @@ class AboutTab extends React.Component {
                 <div className=" row col-md-6">
                   <div className="box-body">
                     <div className="form-group col-md-12 mbottom0">
-                      <label className="col-md-4 lb-LabelStyle">
-                        Link Contacts ::
-                      </label>
-                      {lkContactLst}
-                    </div>
-                    <div className="form-group col-md-12 mbottom0">
-                      <label className="col-md-4 lb-LabelStyle">
-                        Link Organizations ::
-                      </label>
-                      {lkOrgLst}
+                      <label className="col-md-4 lb-LabelStyle">Link ::</label>
+                      {lkDatalist}
                     </div>
                   </div>
                 </div>
@@ -281,7 +292,7 @@ class AboutTab extends React.Component {
                   </div>
                   <div
                     id="directions-body"
-                    className="box-body mapDirectionStyle" 
+                    className="box-body mapDirectionStyle"
                   />
                 </div>
               </div>
@@ -293,3 +304,36 @@ class AboutTab extends React.Component {
   }
 }
 export default AboutTab;
+
+function OverloadMap(param) {
+  let mapOptions = {
+    center: new google.maps.LatLng(param.AddLat, param.AddLong),
+    zoom: 10
+  };
+  // Original => 13.826515, 100.748794
+  // 13.734169, 100.533286
+  let map = new google.maps.Map(document.getElementById("map"), mapOptions);
+
+  let marker = new google.maps.Marker({
+    position: new google.maps.LatLng(param.AddLat, param.AddLong),
+    map: map
+  });
+
+  let contentString = '<div id="infomation_container" align="center">';
+  contentString +=
+    '<label id="lblAddLocation"> ' + param.FullAddress + " </label>";
+  contentString += "</div>";
+
+  let infowindow = new google.maps.InfoWindow({
+    content: contentString
+  });
+
+  google.maps.event.addDomListener(marker, "click", function() {
+    infowindow.open(map, marker);
+  });
+
+  google.maps.event.addDomListener(marker, "mouseover", function() {
+    infowindow.open(map, marker);
+  });
+  infowindow.open(map, marker);
+}

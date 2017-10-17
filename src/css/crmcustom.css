@@ -360,6 +360,11 @@ a.btn-app i {
 .bgpurple {
   background-color: #8e44ad;
 }
+
+.bgpurpleIm {
+  background: #8e44ad !important;
+}
+
 .bglightgray {
   background-color: lightgray;
 }

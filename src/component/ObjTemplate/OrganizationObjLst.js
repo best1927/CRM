@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
 class OrganizationObjLst extends React.Component {
   render() {
    
@@ -21,9 +22,9 @@ class OrganizationObjLst extends React.Component {
               <img
                 src={process.env.PUBLIC_URL + "/images/" + Orgobj.OrganizeUrl}
                 className="imglist"
-              />
+              /> 
               <Link className="blackcolor" to={"/OrganizationView/" + Orgobj.OrganizeId}>
-              <span className="OrgNamelist blackcolor">{Orgobj.OrganizeName}</span>
+              <span className="OrgNamelist ">{Orgobj.OrganizeName}</span>
               </Link>
               {/* <a href="#" className="blackcolor">
                 <span className="OrgNamelist">{Orgobj.OrganizeName}</span>
@@ -42,6 +43,7 @@ class OrganizationObjLst extends React.Component {
             </div>
           </div>
           <div className="col-md-1 pull-right  mh45 no-padding">
+          <Link  to={"/OrganizationNew/" + Orgobj.OrganizeId}>
             <button
               id={"btnEdit" + Orgobj.OrganizeId}
               type="button"
@@ -50,6 +52,7 @@ class OrganizationObjLst extends React.Component {
             >
               <i className="fa fa-pencil fa-1 mright0" />
             </button>
+            </Link>
             <button
               id={"btnTag" + Orgobj.OrganizeId}
               type="button"

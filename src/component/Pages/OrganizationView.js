@@ -1,4 +1,5 @@
 import React from "react";
+
 import { Button } from "react-bootstrap";
 import HeaderContainer from "../Header/HeaderContainer";
 import AboutTab from "../TabContent/AboutTab";
@@ -10,7 +11,16 @@ import TasksTab from "../TabContent/TasksTab";
 import EventsTab from "../TabContent/EventsTab";
 import SalesTab from "../TabContent/SalesTab";
 import TeamTab from "../TabContent/TeamTab";
-import { Route, Switch } from "react-router-dom";
+//import { Route, Switch } from "react-router-dom";
+//import { Link } from "react-router-dom";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import { fetchAppOrganizationview } from "../../actions/crmactionOrganizationView";
+let OrgIdparam;
+let ActCode = "";
+let headerObj = {};
+let ClassCenter = "CRM_Lib.CRM_Controller,CRM_Lib";
+let ClassOrg = "CRM_Lib.Organizations_Controller,CRM_Lib";
 
 class OrganizationView extends React.Component {
   constructor() {
@@ -21,6 +31,7 @@ class OrganizationView extends React.Component {
     this.btnBackClick = this.btnBackClick.bind(this);
     this.btnEditClick = this.btnEditClick.bind(this);
     this.btnDeleteClick = this.btnDeleteClick.bind(this);
+    this.btnTabClick = this.btnTabClick.bind(this);
   }
 
   handleClick(e) {
@@ -28,20 +39,60 @@ class OrganizationView extends React.Component {
     this.setState({ selected: "About" });
   }
 
-  btnDeleteClick(param){
+  btnDeleteClick(param) {
     console.log(param);
     console.log("test btnDelete Click");
   }
 
-  btnEditClick(param){
+  btnEditClick(param) {
     console.log(param);
     console.log("test btnEdit Click");
   }
-  btnBackClick(param){
-    console.log(param);
-    console.log("test btnBack Click");
-
+  btnBackClick(param) { 
+    this.props.history.push("/Organization");
   }
+  btnTabClick(param) {
+    this.setState({ selected: param });
+    let mName = "GetActivityByOwner";
+    let cName = ClassCenter;
+    let parmObj = {};
+    
+    switch (param) {
+      case "About":
+        cName = ClassOrg;
+        mName = "Organization_FindByCode";
+        parmObj = {
+          OrgId: OrgIdparam,
+          lang: "th-TH"
+        };
+        let data = {
+          h: {},
+          classWithNs: cName,
+          methodName: mName,
+          paramStr: parmObj
+        };
+        this.props.fetchAppOrganizationview(data);
+        break; 
+    }
+  }
+
+  componentWillMount() {
+    OrgIdparam = this.props.match.params.OrgId;
+    let mName = "Organization_FindByCode";
+    let cName = ClassOrg;
+    let parmObj = {
+      OrgId: OrgIdparam,
+      lang: "th-TH"
+    };
+    let data = {
+      h: {},
+      classWithNs: cName,
+      methodName: mName,
+      paramStr: parmObj
+    };
+    this.props.fetchAppOrganizationview(data);
+  }
+
   render() {
     let btitleStyle = {
       margin: "0px 0px 0px 5px"
@@ -57,10 +108,10 @@ class OrganizationView extends React.Component {
       Email: EmailTab,
       Notes: NotesTab,
       Files: FilesTab,
-      Tasks:TasksTab,
-      Events:EventsTab,
+      Tasks: TasksTab,
+      Events: EventsTab,
       Sales: SalesTab,
-     Team :TeamTab
+      Team: TeamTab
     }[selected];
 
     return (
@@ -109,7 +160,7 @@ class OrganizationView extends React.Component {
           <ul id="tbToolbar" className="nav nav-pills pull-right">
             <li
               className={this.state.selected === "About" ? "active" : ""}
-              onClick={() => this.setState({ selected: "About" })}
+              onClick={() => this.btnTabClick("About")}
             >
               <a data-toggle="tab" href="#">
                 About
@@ -117,7 +168,7 @@ class OrganizationView extends React.Component {
             </li>
             <li
               className={this.state.selected === "History" ? "active" : ""}
-              onClick={() => this.setState({ selected: "History" })}
+              onClick={() => this.btnTabClick("History")}
             >
               <a data-toggle="tab" href="#">
                 History
@@ -125,7 +176,7 @@ class OrganizationView extends React.Component {
             </li>
             <li
               className={this.state.selected === "Email" ? "active" : ""}
-              onClick={() => this.setState({ selected: "Email" })}
+              onClick={() => this.btnTabClick("Email")}
             >
               <a data-toggle="tab" href="#">
                 Email
@@ -133,7 +184,7 @@ class OrganizationView extends React.Component {
             </li>
             <li
               className={this.state.selected === "Notes" ? "active" : ""}
-              onClick={() => this.setState({ selected: "Notes" })}
+              onClick={() => this.btnTabClick("Notes")}
             >
               <a data-toggle="tab" href="#">
                 Notes
@@ -141,7 +192,7 @@ class OrganizationView extends React.Component {
             </li>
             <li
               className={this.state.selected === "Files" ? "active" : ""}
-              onClick={() => this.setState({ selected: "Files" })}
+              onClick={() => this.btnTabClick("Files")}
             >
               <a data-toggle="tab" href="#">
                 Files
@@ -149,7 +200,7 @@ class OrganizationView extends React.Component {
             </li>
             <li
               className={this.state.selected === "Tasks" ? "active" : ""}
-              onClick={() => this.setState({ selected: "Tasks" })}
+              onClick={() => this.btnTabClick("Tasks")}
             >
               <a data-toggle="tab" href="#">
                 Tasks
@@ -157,7 +208,7 @@ class OrganizationView extends React.Component {
             </li>
             <li
               className={this.state.selected === "Events" ? "active" : ""}
-              onClick={() => this.setState({ selected: "Events" })}
+              onClick={() => this.btnTabClick("Events")}
             >
               <a data-toggle="tab" href="#">
                 Events
@@ -165,7 +216,7 @@ class OrganizationView extends React.Component {
             </li>
             <li
               className={this.state.selected === "Sales" ? "active" : ""}
-              onClick={() => this.setState({ selected: "Sales" })}
+              onClick={() => this.btnTabClick("Sales")}
             >
               <a data-toggle="tab" href="#">
                 Sales
@@ -173,7 +224,7 @@ class OrganizationView extends React.Component {
             </li>
             <li
               className={this.state.selected === "Team" ? "active" : ""}
-              onClick={() => this.setState({ selected: "Team" })}
+              onClick={() => this.btnTabClick("Team")}
             >
               <a data-toggle="tab" href="#">
                 Team Support
@@ -185,7 +236,12 @@ class OrganizationView extends React.Component {
           <div className="row">
             <div className="col-md-12">
               <div className="tab-content mbottom5">
-                <CurrentTab />
+                {/* <CurrentTab /> */}
+                <CurrentTab
+                  DataContext={this.props.appContent}
+                  Dataid={(this.props.appContent !== null && this.props.appContent !== undefined)?this.props.appContent.OrganizeId:""}
+                  DataCat={(this.props.appContent !== null && this.props.appContent !== undefined)?this.props.appContent.ActivityCat:""}
+                />
               </div>
             </div>
           </div>
@@ -194,4 +250,27 @@ class OrganizationView extends React.Component {
     );
   }
 }
-export default OrganizationView;
+function mapStateToProps(state) {
+  // Map newState from Redux Reducer
+  // if (this.state.selected  === "About"){
+  //    headerObj = state.dataContextObj;
+  // }
+  return {
+    appContent: state.dataContextObj
+    // filterContent: state.OrgfilterObjList
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators(
+    {
+      fetchAppOrganizationview: fetchAppOrganizationview
+      // ,
+      // loadAppContent: firstfetchAppContent,
+      // getFilterContent: GetFilterContent
+    },
+    dispatch
+  );
+}
+export default connect(mapStateToProps, mapDispatchToProps)(OrganizationView);
+// export default OrganizationView;

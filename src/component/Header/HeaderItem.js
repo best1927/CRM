@@ -17,9 +17,8 @@ class HeaderItem extends React.Component {
         SearchType: (
           <a
             id="btnAdd"
-            data-lang="btnAdd"
-            //href={this.props.btnAddLink}
-            onClick={() => this.props.btnAddClick()}
+            data-lang="btnAdd" 
+            onClick = {this.props.btnAddClick} 
             title="Add"
             className="btn btn-circle btn-danger"
             style={btitleStyle}
@@ -30,9 +29,8 @@ class HeaderItem extends React.Component {
         NewType: (
           <a
             id="btnBack"
-            data-lang="btnBack"
-            //href={this.props.btnBackLink}
-            onClick={() => this.props.btnBackClick()}
+            data-lang="btnBack" 
+            onClick = {this.props.btnBackLink}  
             title="Back"
             className="btn btn-circle btn-default pull-left "
             style={btitleStyle}
@@ -43,9 +41,8 @@ class HeaderItem extends React.Component {
         EditType: (
           <a
             id="btnBack"
-            data-lang="btnBack"
-            //href={this.props.btnBackLink}
-            onClick={() => this.props.btnBackClick()}
+            data-lang="btnBack" 
+            onClick = {this.props.btnBackLink}  
             title="Back"
             className="btn btn-circle btn-default pull-left "
             style={btitleStyle}
@@ -62,7 +59,7 @@ class HeaderItem extends React.Component {
             <button
               className="btn btn-primary mright5"
               id="btnSave"
-              onClick={() => this.props.btnSaveClick()}
+              onClick = {this.props.btnSaveClick}   
             >
               <span data-lang="lblSave">
                 <i className="fa fa-floppy-o" />Save
@@ -72,7 +69,7 @@ class HeaderItem extends React.Component {
             <button
               className="btn btn-default "
               id="btnClose"
-              onClick={() => this.props.btnCloseClick()}
+              onClick = {this.props.btnCloseClick}    
             >
               <span data-lang="lblClose">
                 <i className="fa fa-times-circle-o" />Close
@@ -106,8 +103,8 @@ class HeaderItem extends React.Component {
           {this.props.DelYn === "Y" ? (
             <a
               id="btnDel"
-              data-lang="btnDel"
-              onClick={() => this.props.btnDeleteClick()}
+              data-lang="btnDel" 
+              onClick = {this.props.btnDeleteClick}    
               title="Delete"
               className="btn btn-circle btn-default"
               style={btitleStyle}
@@ -121,7 +118,7 @@ class HeaderItem extends React.Component {
             <a
               id="btnCom"
               data-lang="btnCom"
-              onClick={() => this.props.btnCompletedClick()}
+              onClick = {this.props.btnCompletedClick}   
               title="Complete"
               className="btn btn-circle btn-success"
               style={btitleStyle}

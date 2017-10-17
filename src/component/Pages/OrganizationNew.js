@@ -7,9 +7,13 @@ class OrganizationNew extends React.Component {
   constructor(){
     super(); 
     this.state = {status:'New'}
+    this.btnBackClick = this.btnBackClick.bind(this);
   }
   componentWillMount() {}
-
+  
+  btnBackClick(param) { 
+    this.props.history.push("/Organization");
+  }
   render() {
     let Headertag ;
     let btitleStyle = {
@@ -37,7 +41,7 @@ class OrganizationNew extends React.Component {
           htype="NewType"
           HeaderText=   {this.state.status === 'New' ? "New Organization": "Edit Organization"} 
           savefunc=""
-          btnBackLink="#"
+          btnBackLink={this.btnBackClick}
           morebtnleft ={btnTasklist}
         /> 
        
