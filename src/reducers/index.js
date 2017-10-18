@@ -13,7 +13,7 @@ const rootReducer = combineReducers(
         crmAppItm1:CRMAppItem1Reducer,
         Orgobjlist:ReducerOrganization,
         TagVisible:ReducerStandard,
-        OrgfilterObjList: ReducerStandard, 
+        filterObjList: ReducerStandard, 
         dataContextObj:ReducerOrganizationView,
         dataTabObjList:ReducerOrganizationTab
     } 

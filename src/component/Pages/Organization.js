@@ -40,7 +40,7 @@ class Organization extends React.Component {
       methodName: "SearchOrganization",
       paramStr: {
         Alphabetfilter: param,
-        Combofilter: this.FilterCombo.value,
+        Combofilter: this.FilterCombo.value !== undefined ? this.FilterCombo.value : "", 
         txtFilter:
           this.txtSearchOrg.value !== undefined ? this.txtSearchOrg.value : "",
         userid: "watinee.put",
@@ -63,13 +63,13 @@ class Organization extends React.Component {
       methodName: "SearchOrganization",
       paramStr: {
         Alphabetfilter: "",
-        Combofilter: this.FilterCombo.value,
+        Combofilter: this.FilterCombo.value !== undefined ? this.FilterCombo.value : "", 
         txtFilter:
           this.txtSearchOrg.value !== undefined ? this.txtSearchOrg.value : "",
-        userid: "watinee.put",
-        lang: "en-US",
-        tagstr: param,
-        curpage: 0
+          userid: "watinee.put",
+          lang: "en-US",
+          tagstr: param,
+          curpage: 0
       }
     };
 
@@ -167,6 +167,9 @@ class Organization extends React.Component {
   }
 
   componentDidMount() {
+
+    // document.getElementById("body").addClass('sidebar-collapse');
+
     window.addEventListener("resize", function(event) {
       if (document.getElementById("divalpha") !== null) {
         let divalpha = document.getElementById("divalpha");
@@ -204,8 +207,7 @@ class Organization extends React.Component {
         userid: "watinee.put",
         lang: "en-US",
         tagstr: "",
-        curpage: 0,
-        maxRec: 20
+        curpage: 0 
       }
     };
 
@@ -218,11 +220,13 @@ class Organization extends React.Component {
       this.props.filterContent !== null &&
       this.props.filterContent !== undefined
     ) {
-      filterObjlst = this.props.filterContent[0].GdCodeLst.map(Gdobj => ({
+      filterObjlst = this.props.filterContent.GdFilter[0].GdCodeLst.map(Gdobj => ({
         value: Gdobj.Gdcode,
         label: Gdobj.Desc1
       }));
     }
+
+   
 
     {
       /* placeholder="Filter..." */
@@ -287,7 +291,7 @@ function mapStateToProps(state) {
   // Map newState from Redux Reducer
   return {
     appContent: state.Orgobjlist,
-    filterContent: state.OrgfilterObjList
+    filterContent: state.filterObjList
   };
 }
 
