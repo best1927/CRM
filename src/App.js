@@ -72,7 +72,7 @@ class App extends Component {
                 <Route path="/Contacts" component={Contacts} />
 
                 <Route path="/Organization" component={Organization} />    
-                <Route path="/OrganizationNew" component={OrganizationNew} />
+                {/* <Route path="/OrganizationNew" component={OrganizationNew} /> */}
                 <Route path="/OrganizationNew/:OrgId" component={OrganizationNew} />
             
                 <Route path="/OrganizationView/:OrgId" component={OrganizationView} />

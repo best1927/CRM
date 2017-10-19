@@ -6,6 +6,11 @@ import AutoSearch from "../standard/AutoSearch";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
+import DateAnniObj from "../ObjTemplate/DateAnniObj";
+import VisibilityObj from "../ObjTemplate/VisibilityObj";
+//import validator from 'validator';
+import Form from "react-validation/build/form";
+import Input from "react-validation/build/input";
 
 import Select from "react-select";
 import "react-select/dist/react-select.css";
@@ -14,6 +19,84 @@ import {
   GetUserTeamContent,
   GetSubGdContent
 } from "../../actions/crmstandardaction";
+
+let AssignTypeObjlst = [];
+let CountryObjlst = [];
+let AssignObjlst = [];
+let StateObjlst = [];
+let DateCatObjlst = [];
+let VisibleCatObjlst = [];
+let DaterenderList = [];
+let SocialList = [];
+let recstate = "";
+
+
+const SetDate = props => {
+  let DataObj = {};
+  DataObj.OrganizeId = 1;
+  DataObj.ActivityCat = "ACCATORG"; 
+  // DataObj.ConvOppId          =  ;
+  // DataObj.OrganizeSt          =  ;
+  DataObj.DescrLoc            =  props.DescrLoc.Value;
+  DataObj.DescrOth            =  props.DescrOth.Value;
+  // DataObj.OrganizeUrl         =  ;
+  // DataObj.OrganizeType        =  ;
+  // DataObj.CorporateDt         =  ;
+  // DataObj.NotifyYn            =  ;
+  // DataObj.Schedule             =  ;
+  // DataObj.OrganizeDt          =  ;
+  // DataObj.ConvertDt           =  ;
+  // DataObj.AssignCat           =  ;
+  // DataObj.AssignId            =  ;
+  // DataObj.AnnualRevenue       =  ;
+  // DataObj.NumOfEmp           =  ;
+  // DataObj.Address              =  ;
+  // DataObj.Subdistrict          =  ;
+  // DataObj.District             =  ;
+  // DataObj.City                 =  ;
+  // DataObj.State                =  ;
+  // DataObj.Country              =  ;
+  // DataObj.Postalcode           =  ;
+  // DataObj.Add_lat              =  ;
+  // DataObj.Add_long             =  ;
+  // DataObj.BillAddress         =  ;
+  // DataObj.BillSubdistrict     =  ;
+  // DataObj.BillDistrict        =  ;
+  // DataObj.BillCity            =  ;
+  // DataObj.BillState           =  ;
+  // DataObj.BillCountry         =  ;
+  // DataObj.BillPostalcode      =  ;
+  // DataObj.BillLat             =  ;
+  // DataObj.BillLong            =  ;
+  // DataObj.PhoneHome           =  ;
+  // DataObj.PhoneMobile         =  ;
+  // DataObj.PhoneOffice         =  ;
+  // DataObj.PhoneFax            =  ;
+  // DataObj.Email                =  ;
+  // DataObj.FacebookUrl         =  ;
+  // DataObj.TwitterUrl          =  ;
+  // DataObj.Line_acc             =  ;
+  // DataObj.PhotoUrl            =  ;
+  // DataObj.Rating               =  ;
+  // DataObj.Descr                =  ;
+  // DataObj.Isconvert            =  ;
+  // DataObj.Isdeleted            =  ;
+  // DataObj.AId                 =  ;
+  // DataObj.VisibileType        =  ;
+  // DataObj.VisibileCd          =  ;
+  // DataObj.RefSapcode          =  ;
+  // DataObj.RefMdm              =  ;
+  // DataObj.Createuser           =  ;
+  // DataObj.Createdate           =  ;
+  // DataObj.Modifyuser           =  ;
+  // DataObj.Modifydate           =  ;
+  // DataObj.Programcode			 =	;
+  return DataObj;
+};
+
+
+
+
 class OrganizationNew extends React.Component {
   constructor() {
     super();
@@ -27,24 +110,39 @@ class OrganizationNew extends React.Component {
       assignAct: null,
       userdisable: true,
       mstatedisable: true,
-      ostatedisable: true
+      ostatedisable: true,
+      visiblerdCheck: ""
     };
     this.btnBackClick = this.btnBackClick.bind(this);
+    this.btnSaveClick = this.btnSaveClick.bind(this); 
     this.handleSelect = this.handleSelect.bind(this);
     this.cboMailhandleSelect = this.cboMailhandleSelect.bind(this);
     this.cboOthhandleSelect = this.cboOthhandleSelect.bind(this);
     this.cbocurrNameHandle = this.cbocurrNameHandle.bind(this);
     this.cboMStateHandle = this.cboMStateHandle.bind(this);
     this.cboOStateHandle = this.cboOStateHandle.bind(this);
+    this.AddSocialhandler = this.AddSocialhandler.bind(this);
+    this.AddAnniDateHandle = this.AddAnniDateHandle.bind(this);
+    this.RadioClickhandler = this.RadioClickhandler.bind(this);
   }
-  
+
   componentWillMount() {
+    if (
+      this.props.match.params.OrgId !== undefined &&
+      this.props.match.params.OrgId !== null &&  this.props.match.params.OrgId !== "-1"
+    ) {
+      recstate = "Edit";
+    } else {
+      recstate = "New";
+    }
+
     let Gddata = {
       h: {},
       classWithNs: "CRM_Lib.CRM_Controller,CRM_Lib",
       methodName: "GetGdList",
       paramStr: {
-        GdList: "ASSTY,COTRY"
+        lang: "th_TH",
+        GdList: "ASSTY,COTRY,DTCAT,VISTY"
       }
     };
     this.props.getFilterContent(Gddata);
@@ -69,10 +167,9 @@ class OrganizationNew extends React.Component {
     } else {
       this.setState({ active: null, userdisable: true, assignAct: null });
       this.cboAssign.value = "";
-      if (this.cbocurrName !== undefined){
-         this.cbocurrName.value = "";
+      if (this.cbocurrName !== undefined) {
+        this.cbocurrName.value = "";
       }
-     
     }
   }
   cboMailhandleSelect(evt) {
@@ -88,7 +185,7 @@ class OrganizationNew extends React.Component {
         classWithNs: "CRM_Lib.CRM_Controller,CRM_Lib",
         methodName: "GetSubGdList",
         paramStr: {
-          MGdCode: evt.value, 
+          MGdCode: evt.value,
           lang: "th-TH"
         }
       };
@@ -97,10 +194,9 @@ class OrganizationNew extends React.Component {
     } else {
       this.setState({ mactive: null, mstatedisable: true, mstateactive: null });
       this.cboMailCountry.value = "";
-      if (this.cboMailState !== undefined){
-          this.cboMailState.value = "";
+      if (this.cboMailState !== undefined) {
+        this.cboMailState.value = "";
       }
-    
     }
   }
   cboOthhandleSelect(evt) {
@@ -116,7 +212,7 @@ class OrganizationNew extends React.Component {
         classWithNs: "CRM_Lib.CRM_Controller,CRM_Lib",
         methodName: "GetSubGdList",
         paramStr: {
-          MGdCode: evt.value, 
+          MGdCode: evt.value,
           lang: "th-TH"
         }
       };
@@ -125,10 +221,9 @@ class OrganizationNew extends React.Component {
     } else {
       this.setState({ oactive: null, ostatedisable: true, ostateactive: null });
       this.cboOthCountry.value = "";
-      if ( this.cboOthState !== undefined){
+      if (this.cboOthState !== undefined) {
         this.cboOthState.value = "";
       }
-    
     }
   }
 
@@ -170,6 +265,85 @@ class OrganizationNew extends React.Component {
   btnBackClick(param) {
     this.props.history.push("/Organization");
   }
+
+  btnSaveClick(param)
+  {
+
+  }
+
+  AddSocialhandler() {
+    SocialList = (
+      <div>
+        <div className="row mtop5">
+          <div className="form-group">
+            <label className="lb-LabelStyle col-md-3 pleft0">
+              Facebook Url ::
+            </label>
+            <div className="col-md-9">
+              <input
+                id="txtFacebook"
+                className="form-control"
+                type="text"
+                placeholder="Facebook Url"
+                ref={c => (this.txtFacebook = c)}
+              />
+            </div>
+          </div>
+        </div>
+        <div className="row mtop5">
+          <div className="form-group">
+            <label className="lb-LabelStyle col-md-3 pleft0">
+              Twitter Url ::
+            </label>
+            <div className="col-md-9">
+              <input
+                id="txtTwitter"
+                className="form-control"
+                type="text"
+                placeholder="Twitter Url"
+                ref={c => (this.txtTwitter = c)}
+              />
+            </div>
+          </div>
+        </div>
+        <div className="row mtop5">
+          <div className="form-group">
+            <label className="lb-LabelStyle col-md-3 pleft0">Line ::</label>
+            <div className="col-md-9">
+              <input
+                id="txtLine"
+                className="form-control"
+                type="text"
+                placeholder="Line"
+                ref={c => (this.txtLine = c)}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+  AddAnniDateHandle() {
+    let cnt = 1;
+    if (DaterenderList !== undefined && DaterenderList !== null) {
+      cnt = DaterenderList.length + 2;
+
+      DaterenderList.push(
+        <DateAnniObj
+          selectId={"cboDate" + cnt}
+          selectoptions={DateCatObjlst}
+          //DelDateClick={this.DelDateClickhandler}
+          delcollapsed=""
+          indexs={cnt}
+          defaultSelectVal=""
+          disabled={false}
+        />
+      );
+    }
+  }
+
+  RadioClickhandler(eventKey) {}
+
   render() {
     let Headertag;
     let btitleStyle = {
@@ -178,10 +352,6 @@ class OrganizationNew extends React.Component {
 
     //////////////////// Gendata to  Combo  ////////////////////
 
-    let AssignTypeObjlst = [];
-    let CountryObjlst = [];
-    let AssignObjlst = [];
-    let StateObjlst = [];
     if (
       this.props.filterContent !== null &&
       this.props.filterContent !== undefined
@@ -193,14 +363,28 @@ class OrganizationNew extends React.Component {
         AssignTypeObjlst = this.props.filterContent.GdFilter[0].GdCodeLst.map(
           Gdobj => ({
             value: Gdobj.Gdcode,
-            label: Gdobj.Desc1
+            label: Gdobj.Descr
           })
         );
 
         CountryObjlst = this.props.filterContent.GdFilter[1].GdCodeLst.map(
           Gdobj => ({
             value: Gdobj.Gdcode,
-            label: Gdobj.Desc1
+            label: Gdobj.Descr
+          })
+        );
+
+        DateCatObjlst = this.props.filterContent.GdFilter[2].GdCodeLst.map(
+          Gdobj => ({
+            value: Gdobj.Gdcode,
+            label: Gdobj.Descr
+          })
+        );
+
+        VisibleCatObjlst = this.props.filterContent.GdFilter[3].GdCodeLst.map(
+          Gdobj => ({
+            value: Gdobj.Gdcode,
+            label: Gdobj.Descr
           })
         );
       }
@@ -215,6 +399,15 @@ class OrganizationNew extends React.Component {
         }));
       }
 
+      if (
+        this.props.filterContent.SubGdFilter != undefined &&
+        this.props.filterContent.SubGdFilter.length > 0
+      ) {
+        StateObjlst = this.props.filterContent.SubGdFilter.map(Gdobj => ({
+          value: Gdobj.Code,
+          label: Gdobj.Name
+        }));
+      }
       if (
         this.props.filterContent.SubGdFilter != undefined &&
         this.props.filterContent.SubGdFilter.length > 0
@@ -241,17 +434,17 @@ class OrganizationNew extends React.Component {
         <img src={process.env.PUBLIC_URL + "/images/AddPicture30.png"} />
       </a>
     );
-
+    
     return (
       <div className="box box-primary mbottom5">
         <HeaderItem
           htype="NewType"
           HeaderText={
-            this.state.status === "New"
+            recstate === "New"
               ? "New Organization"
               : "Edit Organization"
           }
-          savefunc=""
+          btnSaveClick={this.btnSaveClick}
           btnBackLink={this.btnBackClick}
           morebtnleft={btnTasklist}
         />
@@ -264,16 +457,26 @@ class OrganizationNew extends React.Component {
                 <div className="box box-primary mbottom5 ">
                   <div className="col-md-6 pleft0">
                     <div className="box-body">
-                      <div className="row">
+                      <div className="row mtop5" >
                         <div className="form-group pleft5">
                           <label className="lb-LabelStyle col-md-3 pleft5">
-                            Organization Name ::
+                            Org. Name (Local) ::
                           </label>
                           <div className="col-md-9">
-                            <input className="form-control" type="text" />
+                            <input className="form-control" type="text" ref={c => (this.DescrLoc = c)}/>
                           </div>
                         </div>
                       </div>
+                      <div className="row mtop5">
+                        <div className="form-group pleft5">
+                          <label className="lb-LabelStyle col-md-3 pleft5">
+                            Org. Name (Other) ::
+                          </label>
+                          <div className="col-md-9">
+                            <input className="form-control" type="text"  ref={c => (this.DescrOth = c)} />
+                          </div>
+                        </div>
+                      </div> 
                       <div className="row mtop5">
                         <div className="form-group pleft5">
                           <label className="lb-LabelStyle col-md-3 pleft0">
@@ -281,17 +484,10 @@ class OrganizationNew extends React.Component {
                           </label>
                           <div className="removePadding-right col-md-4">
                             <DateTimeField
-                              id="dpkDueDateDt"
-                              // className=" pull-right xs"
+                              id="dpkDueDateDt" 
                               mode="date"
                             />
                           </div>
-                        </div>
-
-                        <div className="pull-right mright15">
-                          <a id="lkAddDate" href="#">
-                            <u>Add Others Date of Member</u>
-                          </a>
                         </div>
                       </div>
 
@@ -358,13 +554,38 @@ class OrganizationNew extends React.Component {
 
                       <div className="row mtop5">
                         <div className="pull-right mright15">
-                          <a href="#">
+                          <a href="#" onClick={this.AddSocialhandler}>
                             <u>Add Social Profiles</u>
                           </a>
                         </div>
                       </div>
+                      {SocialList}
                       <hr className="hr-format" />
-
+                      <div className="row mtop5">
+                        <div className="form-group pleft5">
+                          <div id="divDateAnniList">
+                            <DateAnniObj
+                              selectId="cboDate1"
+                              selectoptions={DateCatObjlst}
+                              DelDateClick={this.DelDateClickhandler}
+                              delcollapsed="collapsed"
+                              defaultSelectVal="DTCAT_EST"
+                              disabled={true}
+                            />
+                            {DaterenderList}
+                            <div className="pull-right mright15">
+                              <a
+                                id="lkAddDate"
+                                href="#"
+                                onClick={this.AddAnniDateHandle}
+                              >
+                                <u>Add Others Date of Member</u>
+                              </a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <hr className="hr-format" />
                       <div className="row mtop5">
                         <div className="form-group pleft5">
                           <label className="lb-LabelStyle col-md-3 pleft0">
@@ -423,9 +644,11 @@ class OrganizationNew extends React.Component {
                             />
                           </div>
                         </div>
-                      </div>
-                      <hr className="hr-format" />
-                      <div className="row mtop5">
+                      </div> 
+                    </div>
+                  </div>
+                  <div className="col-md-6">
+                  <div className="row mtop5">
                         <label className="lb-LLabelStyle col-md-4 mleft15">
                           <u>Additional Information</u>
                         </label>
@@ -435,10 +658,9 @@ class OrganizationNew extends React.Component {
                           <textarea className="textareasty" />
                         </div>
                       </div>
-                    </div>
-                  </div>
-                  <div className="col-md-6">
-                    <div className="row">
+                  <hr className="hr-format" />
+                    <div className="row  ">
+                  
                       <label className="lb-LLabelStyle col-md-4 mleft15">
                         <u>Address (Mail)</u>
                       </label>
@@ -503,7 +725,6 @@ class OrganizationNew extends React.Component {
                             searchable={true}
                             clearable
                           />
- 
                         </div>
                       </div>
                     </div>
@@ -558,26 +779,26 @@ class OrganizationNew extends React.Component {
                           />
                         </div>
                         <div className="col-md-7">
-                        <Select
-                        className="blackcolor l"
-                        placeholder="Select Province/State ..."
-                        id="cboOthState"
-                        name="cboOthState"
-                        options={StateObjlst}
-                        value={this.state.ostateactive}
-                        onChange={this.cboOStateHandle}
-                        disabled={this.state.ostatedisable}
-                        ref={c => (this.cboOthState = c)}
-                        searchable={true}
-                        clearable
-                      />
+                          <Select
+                            className="blackcolor l"
+                            placeholder="Select Province/State ..."
+                            id="cboOthState"
+                            name="cboOthState"
+                            options={StateObjlst}
+                            value={this.state.ostateactive}
+                            onChange={this.cboOStateHandle}
+                            disabled={this.state.ostatedisable}
+                            ref={c => (this.cboOthState = c)}
+                            searchable={true}
+                            clearable
+                          />
                         </div>
                       </div>
                     </div>
                     <hr className="hr-format" />
 
                     <div className="row mtop5">
-                      <div className="form-group pleft5">
+                      {/* <div className="form-group pleft5">
                         <label className="lb-LabelStyle col-md-3 pleft0">
                           Visibility ::
                         </label>
@@ -587,10 +808,17 @@ class OrganizationNew extends React.Component {
                               <div className="radio">
                                 <label>
                                   <input
+                                    id="rdrAll"
                                     type="radio"
                                     className="w18 h18"
-                                    checked="checked"
+                                    checked={
+                                      this.state.visiblerdCheck === "rdrAll"
+                                        ? "checked"
+                                        : ""
+                                    }
                                     name="optradio"
+                                    onClick={this.RadioClickhandler}
+                                    ref={c => (this.Visiblecd = c)}
                                   />
                                   Everyone
                                 </label>
@@ -601,9 +829,14 @@ class OrganizationNew extends React.Component {
                               <div className="radio">
                                 <label>
                                   <input
+                                    id="rdrOwner"
                                     type="radio"
                                     className="w18 h18"
-                                    checked="checked"
+                                    checked={
+                                      this.state.visiblerdCheck === "rdrOwner"
+                                        ? "checked"
+                                        : ""
+                                    }
                                     name="optradio"
                                   />
                                   Only the record owner
@@ -616,8 +849,14 @@ class OrganizationNew extends React.Component {
                             <div className="radio col-md-6">
                               <label>
                                 <input
+                                  id="rdrTeam"
                                   type="radio"
                                   className="w18 h18"
+                                  checked={
+                                    this.state.visiblerdCheck === "rdrTeam"
+                                      ? "checked"
+                                      : ""
+                                  }
                                   name="optradio"
                                 />
                                 Select a team
@@ -640,8 +879,14 @@ class OrganizationNew extends React.Component {
                             <div className="radio col-md-6">
                               <label>
                                 <input
+                                  id="rdrPerson"
                                   type="radio"
                                   className="w18 h18"
+                                  checked={
+                                    this.state.visiblerdCheck === "rdrPerson"
+                                      ? "checked"
+                                      : ""
+                                  }
                                   name="optradio"
                                 />
                                 Select individual people
@@ -659,7 +904,10 @@ class OrganizationNew extends React.Component {
                             </div>
                           </div>
                         </div>
-                      </div>
+                      </div> */}
+                      <VisibilityObj GdVisiblelist={VisibleCatObjlst} />
+                      {/* <VisibilityObj
+                       /> */}
                     </div>
                   </div>
                 </div>

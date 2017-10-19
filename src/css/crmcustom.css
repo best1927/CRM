@@ -550,6 +550,9 @@ a.btn-app i {
 .mtop7 {
   margin-top: 7px;
 }
+.mtop7im {
+  margin-top: 7px !important;
+}
 
 .mtop10 {
   margin-top: 10px;
@@ -557,6 +560,9 @@ a.btn-app i {
 
 .mtop15 {
   margin-top: 15px;
+}
+.mtop20 {
+  margin-top: 20px;
 }
 
 .mtop25 {
@@ -933,3 +939,10 @@ span.input-group-addon {
 .collapsed{
   visibility :collapse;
 }
+
+.zi50{
+  z-index: 50;
+}
+
+
+

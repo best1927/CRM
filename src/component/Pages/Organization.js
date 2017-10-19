@@ -97,7 +97,7 @@ class Organization extends React.Component {
   btnNewClick(param) {
     console.log(param);
     console.log("test btnNew Click");
-    this.props.history.push("/OrganizationNew");
+    this.props.history.push("/OrganizationNew/-1");
   }
   handleKeyPress(event) {
     if (event.key === "Enter") {
@@ -189,6 +189,7 @@ class Organization extends React.Component {
       classWithNs: "CRM_Lib.CRM_Controller,CRM_Lib",
       methodName: "GetGdList",
       paramStr: {
+        lang: "th-TH",
         GdList: "FTORG"
       }
     };
@@ -222,7 +223,7 @@ class Organization extends React.Component {
     ) {
       filterObjlst = this.props.filterContent.GdFilter[0].GdCodeLst.map(Gdobj => ({
         value: Gdobj.Gdcode,
-        label: Gdobj.Desc1
+        label: Gdobj.Descr
       }));
     }
 
